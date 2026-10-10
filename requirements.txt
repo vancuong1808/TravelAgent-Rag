@@ -12,3 +12,4 @@ uvicorn
 python-dotenv
 ragas>=0.2
 datasets
+sentence-transformers>=2.0
