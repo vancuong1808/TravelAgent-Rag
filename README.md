@@ -45,8 +45,12 @@ curl -X POST localhost:8000/ask -H "Content-Type: application/json" -d "{\"quest
 python eval/run_eval.py
 ```
 
-Do thu cong: so cau co nguon / tong 20 cau. Nang cao: dung RAGAS
-(`faithfulness`, `context_recall`) — xem `eval/run_eval.py`.
+Chay nhanh: `python eval/run_eval.py` (kiem tra co nguon/khong).
+Chuan RAGAS: `python eval/ragas_eval.py` (20 cau, 4 metric
+`faithfulness`, `answer_relevancy`, `context_precision`, `context_recall`)
+-> ra `eval/results.csv + results.md`, copy bang mean vao day.
+Thu nhanh 2 cau: `python eval/ragas_eval.py --n 2`.
+Neu gap 503 UNAVAILABLE la do Google qua tai, doi chut chay lai.
 
 ## Cai tien tu ban notebook cu
 

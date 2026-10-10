@@ -13,3 +13,4 @@ python-dotenv
 ragas>=0.2
 datasets
 sentence-transformers>=2.0
+langchain-google-vertexai>=1.0  # shim import cho ragas 0.4.3 (xem eval/ragas_eval.py)

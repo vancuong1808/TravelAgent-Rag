@@ -11,6 +11,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 INDEX_DIR = Path(os.getenv("INDEX_DIR", "./chroma_db"))
+MODEL_NAME = os.getenv("MODEL_NAME", "gemini-3.8-flash")
 
 PROMPT = ChatPromptTemplate.from_messages([
     ("system",
@@ -40,7 +41,7 @@ def build_chain(k: int = 5, paper: str | None = None):
         # Loc metadata: chi truy hoi trong 1 paper (demo suc manh Chroma vs FAISS)
         search_kwargs["filter"] = {"paper": paper}
     retriever = vs.as_retriever(search_kwargs=search_kwargs)
-    llm = ChatGoogleGenerativeAI(model="gemini-3.8-flash", temperature=0)
+    llm = ChatGoogleGenerativeAI(model=MODEL_NAME, temperature=0)
     chain = (
         {"context": itemgetter("input") | retriever | docs_to_str,
          "input": itemgetter("input")}
