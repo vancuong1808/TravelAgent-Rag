@@ -1,0 +1,22 @@
+[
+  {"q": "Paper nao dung multi-agent cho travel planning?", "hint": "TRIPPULSE / HiMAP-Travel / OPENPATH"},
+  {"q": "TREK danh gia LLM agent bang metric gi?", "hint": "TREK paper"},
+  {"q": "TripScore can chinh LLM bang cach nao?", "hint": "TripScore expert-calibrated reward"},
+  {"q": "UTP-Bench tap trung vao khia canh uncertainty nao?", "hint": "UTP-Bench"},
+  {"q": "MobilityBench danh gia route-planning agent trong scenario nao?", "hint": "MobilityBench"},
+  {"q": "Think2Go de xuat gi cho POI recommendation?", "hint": "Think2Go generative next POI"},
+  {"q": "DeepTravel dung framework hoc nao cho agent?", "hint": "DeepTravel agentic RL"},
+  {"q": "Behavior2Trip ca nhan hoa travel planning dua tren du lieu gi?", "hint": "user behavior trajectory"},
+  {"q": "AlterAtlas chuyen tu AI generation sang validation bang cach nao?", "hint": "persona-driven simulations"},
+  {"q": "IntTravel de xuat dataset va framework gi?", "hint": "integrated multi-task travel recommendation"},
+  {"q": "HiMAP-Travel xu ly long-horizon constrained travel the nao?", "hint": "hierarchical multi-agent"},
+  {"q": "Embark framework toi uu lich trinh multi-day ra sao?", "hint": "user demand oriented"},
+  {"q": "Beyond Itinerary Planning benchmark cac tac vu multi-turn va tool-use nao?", "hint": "benchmark paper"},
+  {"q": "Decomposability-Guaranteed CCE giai large-scale itinerary planning the nao?", "hint": "cooperative coevolution"},
+  {"q": "TravelAgent ho tro personalized travel planning bang kien truc gi?", "hint": "TravelAgent AI assistant"},
+  {"q": "OPENPATH thiet ke supervisor-specialist the nao cho accessible trip planning?", "hint": "OPENPATH"},
+  {"q": "Trip+ benchmark agent trong personalized interactive travel planning ra sao?", "hint": "Trip+ interactive"},
+  {"q": "Vehicle Routing Problem ket hop LLM theo huong nao?", "hint": "VRP overview paper"},
+  {"q": "Orienteering problem co cac huong mo hinh va thuat toan nao?", "hint": "survey orienteering"},
+  {"q": "Parallel pull labelling giai resource constrained shortest path the nao?", "hint": "pull labelling algorithm"}
+]
