@@ -4,3 +4,11 @@ index/
 .venv/
 *.pyc
 chroma_db/
+
+# Ket qua eval sinh ra khi chay (chi commit README, khong commit output)
+eval/results.csv
+eval/results.md
+
+# Khong commit PDF / du lieu lon; giu .gitkeep de giu folder data/
+data/*
+!data/.gitkeep

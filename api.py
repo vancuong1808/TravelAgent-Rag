@@ -1,4 +1,3 @@
-"""FastAPI: POST /ask {question, k} -> {answer, sources}."""
 from fastapi import FastAPI
 from pydantic import BaseModel
 from ask import ask

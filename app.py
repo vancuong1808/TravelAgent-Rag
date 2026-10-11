@@ -1,4 +1,3 @@
-"""Streamlit demo: hoi dap 21 paper PBL6."""
 import streamlit as st
 from ask import ask
 

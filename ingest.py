@@ -1,24 +1,25 @@
-"""Ingest 21 paper PBL6 -> chunk -> ChromaDB (persist disk + metadata)."""
-import os
-from pathlib import Path
-from dotenv import load_dotenv
+"""Ingest PDF PBL6 -> chunk 800/150 -> ChromaDB (persist disk + metadata)."""
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
-load_dotenv()
-PAPERS_DIR = Path(os.getenv("PAPERS_DIR", r"C:/Users/ADMIN/Downloads/pbl6_paper"))
-INDEX_DIR = Path(os.getenv("INDEX_DIR", "./chroma_db"))
+from config import INDEX_DIR, PAPERS_DIR, validate_env
+
 
 def main():
+    validate_env(require_papers=True)
     pdfs = sorted(PAPERS_DIR.glob("*.pdf"))
     print(f"Tim thay {len(pdfs)} PDF trong {PAPERS_DIR}")
-    assert pdfs, "Khong tim thay PDF nao. Kiem tra PAPERS_DIR trong .env"
+    assert pdfs, (
+        f"Khong tim thay PDF nao trong {PAPERS_DIR}. "
+        "Bo PDF vao folder nay hoac sua PAPERS_DIR trong .env."
+    )
     all_docs = []
     for pdf in pdfs:
         docs = PyPDFLoader(str(pdf)).load()
         for d in docs:
+            # stem -> ten-file.pdf, name -> ten-file, metadata["paper"] -> ten-file (80 ky tu dau)
             d.metadata["paper"] = pdf.stem[:80]
             d.metadata["source_file"] = pdf.name
         all_docs.extend(docs)
@@ -34,6 +35,7 @@ def main():
         persist_directory=str(INDEX_DIR),
     )
     print(f"Luu Chroma tai {INDEX_DIR} ({vs._collection.count()} vectors).")
+
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,3 @@
-"""Eval don gian: chay 20 cau qua RAG, cham faithfulness thu cong hoac bang RAGAS (neu cai)."""
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

@@ -1,17 +1,20 @@
-"""RAG core: load ChromaDB -> retriever k=5 (+ filter paper) -> Gemini + trich nguon."""
-import os
-from pathlib import Path
+"""RAG core: load ChromaDB -> retriever k=5 (+ filter paper) -> Gemini + trich nguon.
+
+LLM, embeddings, vectorstore va chain duoc cache (singleton/lru_cache) de tai
+su dung giua cac request thay vi rebuild moi lan.
+"""
+from functools import lru_cache
 from operator import itemgetter
-from dotenv import load_dotenv
+
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-load_dotenv()
-INDEX_DIR = Path(os.getenv("INDEX_DIR", "./chroma_db"))
-MODEL_NAME = os.getenv("MODEL_NAME", "gemini-3.8-flash")
+from config import EMBED_MODEL, INDEX_DIR, MODEL_NAME, validate_env
+
+validate_env()  # fail fast neu thieu GOOGLE_API_KEY (api import ask cung huong loi nay)
 
 PROMPT = ChatPromptTemplate.from_messages([
     ("system",
@@ -22,6 +25,7 @@ PROMPT = ChatPromptTemplate.from_messages([
     ("human", "{input}"),
 ])
 
+
 def docs_to_str(docs):
     out = []
     for d in docs:
@@ -30,30 +34,41 @@ def docs_to_str(docs):
         out.append(f"[{paper} - p.{page}]\n{d.page_content}")
     return "\n\n".join(out)
 
+
+@lru_cache(maxsize=1)
+def get_llm() -> ChatGoogleGenerativeAI:
+    """Singleton LLM (Gemini)."""
+    return ChatGoogleGenerativeAI(model=MODEL_NAME, temperature=0)
+
+
+@lru_cache(maxsize=1)
+def get_vectorstore() -> Chroma:
+    """Singleton vectorstore: nap embeddings + Chroma 1 lan duy nhat."""
+    emb = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
+    return Chroma(persist_directory=str(INDEX_DIR), embedding_function=emb)
+
+
+@lru_cache(maxsize=32)
 def build_chain(k: int = 5, paper: str | None = None):
-    emb = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    vs = Chroma(
-        persist_directory=str(INDEX_DIR),
-        embedding_function=emb,
-    )
+    """Chain + retriever cho cap (k, paper); cache theo tham so."""
     search_kwargs: dict = {"k": k}
     if paper:
-        # Loc metadata: chi truy hoi trong 1 paper (demo suc manh Chroma vs FAISS)
         search_kwargs["filter"] = {"paper": paper}
-    retriever = vs.as_retriever(search_kwargs=search_kwargs)
-    llm = ChatGoogleGenerativeAI(model=MODEL_NAME, temperature=0)
+    retriever = get_vectorstore().as_retriever(search_kwargs=search_kwargs)
     chain = (
         {"context": itemgetter("input") | retriever | docs_to_str,
          "input": itemgetter("input")}
-        | PROMPT | llm | StrOutputParser()
+        | PROMPT | get_llm() | StrOutputParser()
     )
     return chain, retriever
+
 
 def ask(question: str, k: int = 5, paper: str | None = None):
     chain, retriever = build_chain(k, paper)
     srcs = retriever.invoke(question)
     ans = chain.invoke({"input": question})
     return ans, srcs
+
 
 if __name__ == "__main__":
     import sys
