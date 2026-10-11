@@ -23,6 +23,8 @@ def validate_env(require_papers: bool = False) -> None:
 
     - GOOGLE_API_KEY: moi entrypoint deu can (Gemini).
     - PAPERS_DIR: chi can khi ingest (require_papers=True).
+    - LM_STUDIO_MODEL: chi can khi su dung LM Studio (MODEL_BACKEND=qwen).
+    - LM_STUDIO_BASE_URL: chi can khi su dung LM Studio (MODEL_BACKEND=qwen).
     """
     problems = []
     if not os.getenv("GOOGLE_API_KEY"):

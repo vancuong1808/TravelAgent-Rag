@@ -13,3 +13,4 @@ python-dotenv
 ragas>=0.4.3
 datasets
 sentence-transformers>=2.0
+langchain-openai>=1.0  # Qwen local backend (LM studio) can langchain-openai >= 1.0.0

@@ -36,9 +36,20 @@ def docs_to_str(docs):
 
 
 @lru_cache(maxsize=1)
-def get_llm() -> ChatGoogleGenerativeAI:
-    """Singleton LLM (Gemini)."""
-    return ChatGoogleGenerativeAI(model=MODEL_NAME, temperature=0)
+def get_llm():
+    """Singleton LLM: Qwen local lam chinh, Gemini fallback (MODEL_BACKEND)."""
+    import os
+    gemini = ChatGoogleGenerativeAI(model=MODEL_NAME, temperature=0)
+    if os.getenv("MODEL_BACKEND", "qwen").lower() == "gemini":
+        return gemini
+    from langchain_openai import ChatOpenAI
+    qwen = ChatOpenAI(
+        model=os.getenv("LM_STUDIO_MODEL", "qwen3-8b"),
+        base_url=os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1"),
+        api_key="lm-studio",  # LM Studio khong can key, nhung langchain yeu cau
+        temperature=0,
+    )
+    return qwen.with_fallbacks([gemini])
 
 
 @lru_cache(maxsize=1)

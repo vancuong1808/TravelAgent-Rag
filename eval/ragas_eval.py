@@ -67,9 +67,15 @@ def build_dataset(n: int, k: int) -> Dataset:
 
 
 def make_judge() -> LangchainLLMWrapper:
-    """LLM giám khảo (Gemini) dùng để chấm các metric cần LLM."""
-    return LangchainLLMWrapper(ChatGoogleGenerativeAI(
-        model=os.getenv("MODEL_NAME", "gemini-3.8-flash"), temperature=0))
+    """LLM giám khảo: Qwen local (LM Studio), không dùng Gemini để khỏi hết quota."""
+    from langchain_openai import ChatOpenAI
+    base = ChatOpenAI(
+        model=os.getenv("LM_STUDIO_MODEL", "qwen3-8b"),
+        base_url=os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1"),
+        api_key="lm-studio",
+        temperature=0,
+    )
+    return LangchainLLMWrapper(base)
 
 
 def make_embeddings() -> LangchainEmbeddingsWrapper:
@@ -113,7 +119,7 @@ def main() -> None:
     print(f"Chấm {len(ds)} câu bằng RAGAS (4 metrics)...")
 
     # Retry khi Gemini quá tải (503) -- ragas tự thử lại theo RunConfig.
-    run_cfg = RunConfig(max_retries=10, max_wait=60)
+    run_cfg = RunConfig(max_workers=1, timeout=300, max_wait=300, max_retries=2)
     result = evaluate(
         ds,
         metrics=METRICS,

@@ -74,6 +74,20 @@ Chay nhanh: `python eval/run_eval.py` (kiem tra co nguon/khong).
 Chuan RAGAS: `python eval/ragas_eval.py` (20 cau, 4 metric
 `faithfulness`, `answer_relevancy`, `context_precision`, `context_recall`)
 -> ra `eval/results.csv + results.md`, copy bang mean vao day.
+
+## Ket qua eval (baseline, 5 cau, Qwen-3-8B + Gemini judge)
+
+| metric | mean |
+|---|---|
+| faithfulness | 0.558 |
+| answer_relevancy | 0.372 |
+| context_precision | 0.107 |
+| context_recall | 0.467 |
+
+Nhan xet: baseline thap, ro nhat o `context_precision` — retriever
+dang tra ve chunk nhieu. Huong cai thien: viet `ground_truth` day du
+thay keyword-hint, tang k / thu chunk nho hon, them reranker, chay du 20 cau
+bang backend Gemini roi lay so cuoi. (Khong dung so baseline nay tren CV.)
 Thu nhanh 2 cau: `python eval/ragas_eval.py --n 2`.
 Neu gap 503 UNAVAILABLE la do Google qua tai, doi chut chay lai.
 
